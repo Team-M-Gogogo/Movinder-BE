@@ -2,6 +2,7 @@ package com.movinder.be.service;
 
 import com.movinder.be.entity.Customer;
 import com.movinder.be.repository.CustomerRepository;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,6 +15,10 @@ public class CustomerService {
 
     public Customer findByCustomerId(String customerID){
         return customerMongoRepository.findById(customerID).get();
+    }
+
+    public Customer createCustomerAccount(Customer customer) {
+        return customerMongoRepository.save(customer);
     }
 
 }

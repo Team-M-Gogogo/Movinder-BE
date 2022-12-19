@@ -21,6 +21,12 @@ public class CustomerController {
         return customerService.findByCustomerId(customerID);
     }
 
+    @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Customer create(@RequestBody Customer customer) {
+        return customerService.createCustomerAccount(customer);
+    }
+
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public String test() {
