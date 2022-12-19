@@ -1,6 +1,8 @@
 package com.movinder.be;
 
+import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
+import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
 import com.movinder.be.service.MovieService;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
@@ -29,6 +32,9 @@ public class MovieServiceTest {
 
     @Mock
     MovieRepository movieRepository;
+
+    @Mock
+    CinemaRepository cinemaRepository;
 
     @InjectMocks
     MovieService movieService;
@@ -128,6 +134,29 @@ public class MovieServiceTest {
 
         verify(movieRepository).findById(movieId);
     }
+
+    @Test
+    public void should_return_a_Cinema_when_add_cinema_given_a_cinema(){
+        // given
+        Cinema cinema = new Cinema();
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+
+        given(cinemaRepository.save(cinema)).willReturn(cinema);
+
+        // when
+        Cinema savedCinema = movieService.addCinema(cinema);
+
+        // then
+        assertThat(savedCinema.getCinemaName(), equalTo("MCL"));
+        assertThat(savedCinema.getAddress(), equalTo("address"));
+        assertThat(savedCinema.getFloorPlan(), empty());
+
+        verify(cinemaRepository).save(cinema);
+    }
+
+
 
 
 }

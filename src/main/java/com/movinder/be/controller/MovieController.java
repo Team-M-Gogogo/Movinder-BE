@@ -1,5 +1,6 @@
 package com.movinder.be.controller;
 
+import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.service.MovieService;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,14 @@ public class MovieController {
     private static final String DEFAULT_PAGE = "0";
     private static final String DEFAULT_PAGE_SIZE = "20";
 
+    /*
+    Cinema
+     */
+    @PostMapping("/cinemas")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Cinema addCinema(@RequestBody Cinema cinema){
+        return movieService.addCinema(cinema);
+    }
 
     /*
     film

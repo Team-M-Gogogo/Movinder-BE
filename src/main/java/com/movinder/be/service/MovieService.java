@@ -1,10 +1,12 @@
 package com.movinder.be.service;
 
+import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
+import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
@@ -21,13 +23,27 @@ import java.util.stream.Stream;
 
 @Service
 public class MovieService {
+    private final CinemaRepository cinemaRepository;
     private final MovieRepository movieRepository;
 
     private static final int DEFAULT_MOVIE_SEARCH_PERIOD = 3;
 
 
-    public MovieService(MovieRepository movieRepository){
+    public MovieService(CinemaRepository cinemaRepository, MovieRepository movieRepository){
         this.movieRepository = movieRepository;
+        this.cinemaRepository = cinemaRepository;
+    }
+
+    /*
+    Cinema
+     */
+
+    public Cinema addCinema(Cinema cinema){
+        if (cinema.getCinemaId() != null){
+            throw new MalformedRequestException("Create cinema request should not contain ID");
+        }
+        validateCinemaAttributes(cinema);
+        return cinemaRepository.save(cinema);
     }
 
     /*
@@ -84,6 +100,19 @@ public class MovieService {
 
         if (containsNull){
             throw new RequestDataNotCompleteException("Movie");
+        }
+
+    }
+    private void validateCinemaAttributes(Cinema cinema) {
+
+        boolean containsNull = Stream
+                .of(cinema.getAddress(),
+                        cinema.getCinemaName(),
+                        cinema.getFloorPlan())
+                .anyMatch(Objects::isNull);
+
+        if (containsNull){
+            throw new RequestDataNotCompleteException("Cinema");
         }
 
     }
