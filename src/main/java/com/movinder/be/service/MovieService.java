@@ -3,8 +3,10 @@ package com.movinder.be.service;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
+import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.MovieRepository;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,12 +38,16 @@ public class MovieService {
         movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
         validateMovieAttributes(movie);
 
-        //todo throw duplicated key
-        Movie savedMovie = movieRepository.save(movie);
+        try {
+            Movie savedMovie = movieRepository.save(movie);
+            // auto add Room per new movie
+//            forumService.addChatRoom(savedMovie.getMovieId());
+            return savedMovie;
+        } catch (DuplicateKeyException customerExist) {
+            throw new ProvidedKeyAlreadyExistException("Movie name");
+        }
 
-        // auto add Room per new movie
-//        forumService.addChatRoom(savedMovie.getMovieId());
-        return savedMovie;
+
 
     }
 
