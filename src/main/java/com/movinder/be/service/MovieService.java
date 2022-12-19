@@ -108,6 +108,12 @@ public class MovieService {
         movieRepository.save(movie);
     }
 
+    public MovieSession findMovieSessionById(String id){
+        Utility.validateID(id);
+        return movieSessionRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Movie Session"));
+    }
+
+
 
 
     /*

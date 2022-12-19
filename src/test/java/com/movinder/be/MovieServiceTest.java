@@ -266,6 +266,35 @@ public class MovieServiceTest {
         verify(movieSessionRepository).save(movieSession);
     }
 
+    @Test
+    public void should_return_a_movie_session_when_get_movie_session_by_id_given_a_session_id(){
+        // given
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId("1");
+        movieSession.setMovieId("2");
+        movieSession.setPricing(new ArrayList<>());
+
+        String movieSessionId = "63a00a4955506136f35be596";
+
+
+        given(movieSessionRepository.findById(movieSessionId)).willReturn(java.util.Optional.of(movieSession));
+
+        // when
+        MovieSession savedMovieSession = movieService.findMovieSessionById(movieSessionId);
+
+        // then
+        assertThat(savedMovieSession.getCinemaId(), equalTo("1"));
+        assertThat(savedMovieSession.getDatetime(), equalTo(now));
+        assertThat(savedMovieSession.getAvailableSeatings(), empty());
+        assertThat(savedMovieSession.getMovieId(), equalTo("2"));
+        assertThat(savedMovieSession.getPricing(), empty());
+        verify(movieSessionRepository).findById(movieSessionId);
+    }
+
 
 
 }

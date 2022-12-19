@@ -80,4 +80,12 @@ public class MovieController {
         return movieService.addMovieSession(movieSession);
     }
 
+    @GetMapping("/sessions/{sessionID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public MovieSession getSessionById(@PathVariable String sessionID){
+        return movieService.findMovieSessionById(sessionID);
+    }
+
+
+
 }

@@ -7,6 +7,7 @@ import com.movinder.be.entity.Movie;
 import com.movinder.be.entity.MovieSession;
 import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
+import com.movinder.be.repository.MovieSessionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,8 @@ public class MovieControllerTest {
     MovieRepository movieRepository;
     @Autowired
     CinemaRepository cinemaRepository;
+    @Autowired
+    MovieSessionRepository movieSessionRepository;
 
     @BeforeEach
     public void clearDB() {
@@ -264,6 +267,32 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.movieId").value(savedMovie.getMovieId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.pricing").isEmpty());
     }
+
+    @Test
+    public void should_get_movie_session_when_perform_get_by_id_given_session_id() throws Exception {
+        //given
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId("1");
+        movieSession.setMovieId("2");
+        movieSession.setPricing(new ArrayList<>());
+        MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/sessions/{id}", savedMovieSession.getSessionId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.sessionId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.datetime").value(start))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.availableSeatings").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaId").value("1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.movieId").value("2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.pricing").isEmpty());
+    }
+
 
 
 
