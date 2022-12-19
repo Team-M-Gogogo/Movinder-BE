@@ -36,6 +36,14 @@ public class MovieController {
         return movieService.findCinemaById(cinemaID);
     }
 
+    @GetMapping("/cinemas")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Cinema> getCinema(@RequestParam(defaultValue = "") String cinemaName,
+                                  @RequestParam(defaultValue = DEFAULT_PAGE) Integer page,
+                                  @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize){
+        return movieService.getCinema(cinemaName, page, pageSize);
+    }
+
     /*
     film
      */

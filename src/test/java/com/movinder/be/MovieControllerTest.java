@@ -179,5 +179,45 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.floorPlan").isEmpty());
     }
 
+    @Test
+    public void should_get_cinema_list_when_perform_get_given_params_with_filter() throws Exception {
+        //given
+        Cinema cinema1 = new Cinema();
+        cinema1.setAddress("address");
+        cinema1.setCinemaName("MCL");
+        cinema1.setFloorPlan(new ArrayList<>());
+
+        Cinema savedCinema = cinemaRepository.save(cinema1);
+
+
+
+        Cinema cinema2 = new Cinema();
+        cinema2.setAddress("address 2");
+        cinema2.setCinemaName("MCL 2");
+        cinema2.setFloorPlan(new ArrayList<>());
+        Cinema savedCinema2 = cinemaRepository.save(cinema2);
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/cinemas"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaName").value("MCL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].address").value("address"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].floorPlan").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].cinemaId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].cinemaName").value("MCL 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].address").value("address 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].floorPlan").isEmpty());
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/cinemas?cinemaName={name}", "2"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaName").value("MCL 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].address").value("address 2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].floorPlan").isEmpty());
+
+    }
+
 
 }

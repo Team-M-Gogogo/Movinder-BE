@@ -51,6 +51,13 @@ public class MovieService {
         return cinemaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Cinema"));
     }
 
+    public List<Cinema> getCinema(String cinemaName, Integer page, Integer pageSize){
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return cinemaRepository.findBycinemaNameIgnoreCaseContaining(cinemaName, pageable);
+
+    }
+
+
     /*
     Movie
      */

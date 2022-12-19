@@ -180,6 +180,36 @@ public class MovieServiceTest {
         verify(cinemaRepository).findById(cinemaId);
     }
 
+    @Test
+    public void should_return_a_list_of_cinema_when_get_cinema_given_cinemas(){
+        // given
+        Cinema cinema1 = new Cinema();
+        cinema1.setAddress("address");
+        cinema1.setCinemaName("MCL");
+        cinema1.setFloorPlan(new ArrayList<>());
+
+        Cinema cinema2 = new Cinema();
+        cinema2.setAddress("address 2");
+        cinema2.setCinemaName("MCL 2");
+        cinema2.setFloorPlan(new ArrayList<>());
+
+        List<Cinema> cinemas = Arrays.asList(cinema1, cinema2);
+
+        Pageable pageable = PageRequest.of(0, 2);
+
+
+        given(cinemaRepository.findBycinemaNameIgnoreCaseContaining("Avengers", pageable)).willReturn(cinemas);
+        // when
+        List<Cinema> fetchCinemas = movieService
+                .getCinema("Avengers", 0, 2);
+
+        // then
+        assertThat(fetchCinemas, equalTo(cinemas));
+
+
+        verify(cinemaRepository).findBycinemaNameIgnoreCaseContaining("Avengers", pageable);
+    }
+
 
 
 }
