@@ -46,6 +46,11 @@ public class MovieService {
         return cinemaRepository.save(cinema);
     }
 
+    public Cinema findCinemaById(String id){
+        Utility.validateID(id);
+        return cinemaRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Cinema"));
+    }
+
     /*
     Movie
      */

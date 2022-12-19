@@ -29,6 +29,13 @@ public class MovieController {
         return movieService.addCinema(cinema);
     }
 
+    @GetMapping("/cinemas/{cinemaID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Cinema getCinemaById(@PathVariable String cinemaID){
+
+        return movieService.findCinemaById(cinemaID);
+    }
+
     /*
     film
      */

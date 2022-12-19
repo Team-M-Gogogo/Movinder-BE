@@ -156,6 +156,29 @@ public class MovieServiceTest {
         verify(cinemaRepository).save(cinema);
     }
 
+    @Test
+    public void should_return_a_Cinema_when_get_cinema_by_id_given_a_cinema_id(){
+        // given
+
+        Cinema cinema = new Cinema();
+        String cinemaId = "63a00a4955506136f35be595";
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+
+
+        given(cinemaRepository.findById(cinemaId)).willReturn(java.util.Optional.of(cinema));
+
+        // when
+        Cinema savedCinema = movieService.findCinemaById(cinemaId);
+
+        // then
+        assertThat(savedCinema.getCinemaName(), equalTo("MCL"));
+        assertThat(savedCinema.getAddress(), equalTo("address"));
+        assertThat(savedCinema.getFloorPlan(), empty());
+
+        verify(cinemaRepository).findById(cinemaId);
+    }
 
 
 

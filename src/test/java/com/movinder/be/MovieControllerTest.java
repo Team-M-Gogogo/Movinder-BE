@@ -3,6 +3,7 @@ package com.movinder.be;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
+import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,10 +32,13 @@ public class MovieControllerTest {
 
     @Autowired
     MovieRepository movieRepository;
+    @Autowired
+    CinemaRepository cinemaRepository;
 
     @BeforeEach
     public void clearDB() {
         movieRepository.deleteAll();
+        cinemaRepository.deleteAll();
     }
 
     // test
@@ -148,6 +152,27 @@ public class MovieControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(cinemaJson))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaName").value("MCL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("address"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.floorPlan").isEmpty());
+    }
+
+    @Test
+    public void should_get_cinema_when_perform_get_given_cinema_id() throws Exception {
+        //given
+        Cinema cinema = new Cinema();
+        String cinemaId = "63a00a4955506136f35be595";
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+
+        Cinema savedCinema = cinemaRepository.save(cinema);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/cinemas/{id}", savedCinema.getCinemaId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaId").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaName").value("MCL"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.address").value("address"))
