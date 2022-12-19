@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -294,6 +295,36 @@ public class MovieServiceTest {
         assertThat(savedMovieSession.getPricing(), empty());
         verify(movieSessionRepository).findById(movieSessionId);
     }
+
+    @Test
+    public void should_return_movie_sessions_when_get_movie_sessions_by_film_id_and_cinema_id(){
+        // given
+
+        String movieId = "63a00a4955506136f35be596";
+        String cinemaId = "63a00a4955506136f35be597";
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId(cinemaId);
+        movieSession.setMovieId(movieId);
+        movieSession.setPricing(new ArrayList<>());
+
+        given(movieSessionRepository.findByMovieId(movieId)).willReturn(Collections.singletonList(movieSession));
+
+        // when
+        List<MovieSession> savedMovieSession = movieService.getSessionsByMovieIdAndCinemaId(movieId, cinemaId);
+
+        // then
+        assertThat(savedMovieSession.get(0).getCinemaId(), equalTo(cinemaId));
+        assertThat(savedMovieSession.get(0).getDatetime(), equalTo(now));
+        assertThat(savedMovieSession.get(0).getAvailableSeatings(), empty());
+        assertThat(savedMovieSession.get(0).getMovieId(), equalTo(movieId));
+        assertThat(savedMovieSession.get(0).getPricing(), empty());
+        verify(movieSessionRepository).findByMovieId(movieId);
+    }
+
 
 
 

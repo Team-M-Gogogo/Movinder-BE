@@ -21,6 +21,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -115,6 +116,22 @@ public class MovieService {
 
 
 
+    public List<MovieSession> getSessionsByMovieIdAndCinemaId(String movieId, String cinemaId){
+        Utility.validateID(cinemaId);
+        // get set of movie ids
+        return findMovieSessionsByMovieId(movieId)
+                .stream()
+                .filter(movieSessions -> movieSessions.getCinemaId().equals(cinemaId))
+                .collect(Collectors.toList());
+    }
+
+    public List<MovieSession> findMovieSessionsByMovieId(String movieId){
+        Utility.validateID(movieId);
+        return movieSessionRepository.findByMovieId(movieId);
+    }
+
+
+
 
     /*
     Movie
@@ -130,7 +147,7 @@ public class MovieService {
 
         try {
             Movie savedMovie = movieRepository.save(movie);
-            // auto add Room per new movie
+            // auto add Room per new movie todo
 //            forumService.addChatRoom(savedMovie.getMovieId());
             return savedMovie;
         } catch (DuplicateKeyException customerExist) {

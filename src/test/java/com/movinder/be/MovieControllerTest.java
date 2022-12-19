@@ -293,6 +293,33 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.pricing").isEmpty());
     }
 
+    @Test
+    public void should_get_movie_session_when_perform_get_given_film_id_and_cinema_id() throws Exception {
+        //given
+        String movieId = "63a00a4955506136f35be596";
+        String cinemaId = "63a00a4955506136f35be597";
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId(cinemaId);
+        movieSession.setMovieId(movieId);
+        movieSession.setPricing(new ArrayList<>());
+        MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/sessions?filmID={filmID}&cinemaID={cinemaID}", movieId, cinemaId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].sessionId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].datetime").value(start))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].availableSeatings").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaId").value(cinemaId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].movieId").value(movieId))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].pricing").isEmpty());
+    }
+
 
 
 
