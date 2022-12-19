@@ -97,4 +97,37 @@ public class MovieServiceTest {
 
         verify(movieRepository).findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween("Avengers", startDate, endDate, pageable);
     }
+
+    @Test
+    public void should_return_a_Movie_when_get_movie_by_id_given_a_movie_id(){
+        // given
+        Movie movie = new Movie();
+        String movieId = "63a00a4955506136f35be595";
+        movie.setMovieName("Avengers");
+        movie.setDescription("Action movie");
+        movie.setDuration(100);
+        movie.setThumbnailUrl("http://testurl");
+        movie.setMovieSessionIds(new ArrayList<>());
+        movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
+
+
+        given(movieRepository.findById(movieId)).willReturn(java.util.Optional.of(movie));
+
+        // when
+        Movie savedMovie = movieService.findMovieById(movieId);
+
+        // then
+        assertThat(savedMovie.getMovieName(), equalTo("Avengers"));
+        assertThat(savedMovie.getDescription(), equalTo("Action movie"));
+        assertThat(savedMovie.getDuration(), equalTo(100));
+        assertThat(savedMovie.getThumbnailUrl(), equalTo("http://testurl"));
+        assertTrue(savedMovie.getMovieSessionIds().isEmpty());
+        assertThat(savedMovie.getLastShowDateTime(),
+                equalTo(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0))));
+
+
+        verify(movieRepository).findById(movieId);
+    }
+
+
 }

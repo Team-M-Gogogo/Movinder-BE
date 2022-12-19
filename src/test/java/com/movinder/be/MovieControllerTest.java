@@ -105,4 +105,30 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].thumbnailUrl").value("http://testurl2"));;
     }
 
+    @Test
+    public void should_get_movie_when_perform_get_given_film_id() throws Exception {
+        //given
+        Movie movie = new Movie();
+        movie.setMovieName("Avengers");
+        movie.setDescription("Action movie");
+        movie.setDuration(100);
+        movie.setThumbnailUrl("http://testurl");
+        movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
+
+        Movie savedMovie = movieRepository.save(movie);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/films/{id}", savedMovie.getMovieId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.movieId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.movieName").value("Avengers"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("Action movie"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.duration").value(100))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastShowDateTime").value("1970-01-01T00:00:00"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.movieSessionIds").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.thumbnailUrl").value("http://testurl"));
+    }
+
+
 }
