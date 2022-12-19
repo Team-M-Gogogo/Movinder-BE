@@ -1,6 +1,7 @@
 package com.movinder.be.service;
 
 import com.movinder.be.entity.Movie;
+import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.MovieRepository;
@@ -42,6 +43,11 @@ public class MovieService {
 //        forumService.addChatRoom(savedMovie.getMovieId());
         return savedMovie;
 
+    }
+
+    public Movie findMovieById(String id){
+        Utility.validateID(id);
+        return movieRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Movie"));
     }
 
     /*

@@ -29,4 +29,11 @@ public class MovieController {
         return movieService.addMovie(movie);
     }
 
+    @GetMapping("/films/{filmID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Movie getMovieById(@PathVariable String filmID){
+        return movieService.findMovieById(filmID);
+    }
+
+
 }
