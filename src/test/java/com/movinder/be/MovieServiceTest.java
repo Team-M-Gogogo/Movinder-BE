@@ -325,6 +325,43 @@ public class MovieServiceTest {
         verify(movieSessionRepository).findByMovieId(movieId);
     }
 
+    @Test
+    public void should_return_a_cinema_when_get_cinema_by_movie_id_given_a_movie_id(){
+        // given
+        String movieId = "63a00a4955506136f35be595";
+        String cinemaId = "63a00a4955506136f35be596";
+        Cinema cinema = new Cinema();
+        cinema.setCinemaId(cinemaId);
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+
+        given(cinemaRepository.findById(cinemaId)).willReturn(java.util.Optional.of(cinema));
+
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId(cinemaId);
+        movieSession.setMovieId(movieId);
+        movieSession.setPricing(new ArrayList<>());
+
+        given(movieSessionRepository.findByMovieId(movieId)).willReturn(Collections.singletonList(movieSession));
+
+
+        // when
+        List<Cinema> savedCinema = movieService.getCinemaByMovieId(movieId);
+
+        // then
+        assertThat(savedCinema.size(), equalTo(1));
+        assertThat(savedCinema.get(0).getCinemaName(), equalTo("MCL"));
+        assertThat(savedCinema.get(0).getAddress(), equalTo("address"));
+        assertThat(savedCinema.get(0).getFloorPlan(), empty());
+        verify(movieSessionRepository).findByMovieId(movieId);
+        verify(cinemaRepository).findById(cinemaId);
+
+    }
 
 
 

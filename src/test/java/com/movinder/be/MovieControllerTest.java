@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -320,7 +321,48 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].pricing").isEmpty());
     }
 
+    @Test
+    public void should_get_Cinema_when_perform_get_cinema_by_movie_id_given_movie_id() throws Exception {
+        //given
+        Cinema cinema = new Cinema();
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
 
+        Cinema savedCinema = cinemaRepository.save(cinema);
+
+        Movie movie = new Movie();
+        movie.setMovieName("Avengers");
+        movie.setDescription("Action movie");
+        movie.setDuration(100);
+        movie.setThumbnailUrl("http://testurl");
+        movie.setMovieSessionIds(new ArrayList<>());
+        movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
+
+        Movie savedMovie = movieRepository.save(movie);
+
+
+        String movieId = savedMovie.getMovieId();
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId(savedCinema.getCinemaId());
+        movieSession.setMovieId(movieId);
+        movieSession.setPricing(new ArrayList<>());
+        MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/movie/films/{filmID}/cinemas", movieId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].cinemaName").value("MCL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].address").value("address"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].floorPlan").isEmpty());
+    }
 
 
 }

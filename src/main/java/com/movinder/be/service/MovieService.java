@@ -21,6 +21,7 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,6 +65,17 @@ public class MovieService {
         Pageable pageable = PageRequest.of(page, pageSize);
         return cinemaRepository.findBycinemaNameIgnoreCaseContaining(cinemaName, pageable);
 
+    }
+
+    public List<Cinema> getCinemaByMovieId(String movieId){
+
+        // get set of movie ids
+        Set<String> cinemaIdsSet = findMovieSessionsByMovieId(movieId)
+                .stream()
+                .map(MovieSession::getCinemaId)
+                .collect(Collectors.toSet());
+
+        return cinemaIdsSet.stream().map(this::findCinemaById).collect(Collectors.toList());
     }
 
         /*

@@ -71,6 +71,13 @@ public class MovieController {
         return movieService.getMovie(movieName, page, pageSize, from, to, ascending);
     }
 
+    @GetMapping("/films/{filmID}/cinemas")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Cinema> getCinemaByMovieID(@PathVariable String filmID){
+
+        return movieService.getCinemaByMovieId(filmID);
+    }
+
     /*
     Session
      */
