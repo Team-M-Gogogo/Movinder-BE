@@ -14,7 +14,7 @@ public interface MovieRepository extends MongoRepository<Movie, String> {
 //
 //    Streamable<Movie> findBylastShowDateTimeAfter(LocalDateTime date);
 //
-//    List<Movie> findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween(String movieName, LocalDateTime from, LocalDateTime to, Pageable pageable);
+    List<Movie> findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween(String movieName, LocalDateTime from, LocalDateTime to, Pageable pageable);
 
 
 }

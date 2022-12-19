@@ -7,11 +7,15 @@ import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.MovieRepository;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -47,7 +51,15 @@ public class MovieService {
             throw new ProvidedKeyAlreadyExistException("Movie name");
         }
 
+    }
 
+    public List<Movie> getMovie(String movieName, Integer page, Integer pageSize, String from, String to, boolean ascending){
+        LocalDateTime fromDate = from == null ? LocalDateTime.now() : LocalDateTime.parse(from);
+        LocalDateTime toDate = to == null ? LocalDateTime.now().plusMonths(DEFAULT_MOVIE_SEARCH_PERIOD) : LocalDateTime.parse(to);
+        Pageable pageable = PageRequest.of(page, pageSize, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, "lastShowDateTime");
+
+        return movieRepository
+                .findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween(movieName, fromDate, toDate, pageable);
 
     }
 

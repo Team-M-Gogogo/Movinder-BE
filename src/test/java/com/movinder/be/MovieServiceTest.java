@@ -7,11 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -55,5 +59,42 @@ public class MovieServiceTest {
 
 
         verify(movieRepository).save(movie);
+    }
+
+    @Test
+    public void should_return_a_list_of_movie_when_get_movie_given_movies(){
+        // given
+        Movie movie1 = new Movie();
+        movie1.setMovieName("Avengers");
+        movie1.setDescription("Action movie");
+        movie1.setDuration(100);
+        movie1.setThumbnailUrl("http://testurl");
+
+        Movie movie2 = new Movie();
+        movie2.setMovieName("Avengers 2");
+        movie2.setDescription("Action movie");
+        movie2.setDuration(100);
+        movie2.setThumbnailUrl("http://testurl");
+
+        List<Movie> movies = Arrays.asList(movie1, movie2);
+
+        String start = "1970-01-01T00:00:00";
+        String end = "1971-01-01T00:00:00";
+
+        LocalDateTime startDate = LocalDateTime.parse(start);
+        LocalDateTime endDate = LocalDateTime.parse(end);
+        Pageable pageable = PageRequest.of(0, 2,  Sort.Direction.DESC, "lastShowDateTime");
+
+
+        given(movieRepository.findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween("Avengers", startDate, endDate, pageable)).willReturn(movies);
+        // when
+        List<Movie> fetchMovies = movieService
+                .getMovie("Avengers", 0, 2, start, end, false);
+
+        // then
+        assertThat(fetchMovies, equalTo(movies));
+
+
+        verify(movieRepository).findBymovieNameIgnoreCaseContainingAndLastShowDateTimeBetween("Avengers", startDate, endDate, pageable);
     }
 }
