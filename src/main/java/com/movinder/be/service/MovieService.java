@@ -2,12 +2,14 @@ package com.movinder.be.service;
 
 import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
+import com.movinder.be.entity.MovieSession;
 import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
+import com.movinder.be.repository.MovieSessionRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,13 +27,19 @@ import java.util.stream.Stream;
 public class MovieService {
     private final CinemaRepository cinemaRepository;
     private final MovieRepository movieRepository;
+    private final MovieSessionRepository movieSessionRepository;
+
 
     private static final int DEFAULT_MOVIE_SEARCH_PERIOD = 3;
 
 
-    public MovieService(CinemaRepository cinemaRepository, MovieRepository movieRepository){
+    public MovieService(CinemaRepository cinemaRepository,
+                        MovieRepository movieRepository,
+                        MovieSessionRepository movieSessionRepository){
         this.movieRepository = movieRepository;
         this.cinemaRepository = cinemaRepository;
+        this.movieSessionRepository = movieSessionRepository;
+
     }
 
     /*
@@ -56,6 +64,50 @@ public class MovieService {
         return cinemaRepository.findBycinemaNameIgnoreCaseContaining(cinemaName, pageable);
 
     }
+
+        /*
+    Movie Session
+     */
+
+    public MovieSession addMovieSession(MovieSession movieSession){
+        if (movieSession.getSessionId() != null){
+            throw new MalformedRequestException("Create movie session request should not contain ID");
+        }
+        // use the default floor plan
+        movieSession.setAvailableSeatings(
+                findCinemaById(movieSession.getCinemaId()).getFloorPlan());
+        validateMovieSessionAttributes(movieSession);
+
+        // check if movie exist, if not will throw exception
+        findMovieById(movieSession.getMovieId());
+
+        //check cinema exist
+        findCinemaById(movieSession.getCinemaId());
+
+
+        MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
+        savedMovieSession.getMovieId();
+        updateMovieInfo(savedMovieSession);
+
+        return savedMovieSession;
+    }
+
+    // update lastShowTime and session ID
+    private void updateMovieInfo(MovieSession movieSession){
+
+        System.out.println("test" + movieSession.getMovieId());
+        Movie movie = movieRepository
+                .findById(movieSession.getMovieId())
+                .orElseThrow(() -> new IdNotFoundException("Movie"));
+        if (movieSession.getDatetime().isAfter(movie.getLastShowDateTime())){
+            movie.setLastShowDateTime(movieSession.getDatetime());
+        }
+        if (!movie.getMovieSessionIds().contains(movieSession.getSessionId())){
+            movie.getMovieSessionIds().add(movieSession.getSessionId());
+        }
+        movieRepository.save(movie);
+    }
+
 
 
     /*
@@ -125,6 +177,20 @@ public class MovieService {
 
         if (containsNull){
             throw new RequestDataNotCompleteException("Cinema");
+        }
+
+    }
+
+    private void validateMovieSessionAttributes(MovieSession movieSession) {
+
+        boolean containsNull = Stream
+                .of(movieSession.getAvailableSeatings(),
+                        movieSession.getDatetime(),
+                        movieSession.getCinemaId())
+                .anyMatch(Objects::isNull);
+
+        if (containsNull){
+            throw new RequestDataNotCompleteException("Movie Session");
         }
 
     }

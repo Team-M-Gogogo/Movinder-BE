@@ -2,8 +2,10 @@ package com.movinder.be;
 
 import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
+import com.movinder.be.entity.MovieSession;
 import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
+import com.movinder.be.repository.MovieSessionRepository;
 import com.movinder.be.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +37,9 @@ public class MovieServiceTest {
 
     @Mock
     CinemaRepository cinemaRepository;
+
+    @Mock
+    MovieSessionRepository movieSessionRepository;
 
     @InjectMocks
     MovieService movieService;
@@ -208,6 +213,57 @@ public class MovieServiceTest {
 
 
         verify(cinemaRepository).findBycinemaNameIgnoreCaseContaining("Avengers", pageable);
+    }
+
+    @Test
+    public void should_return_a_movie_session_when_add_movie_session_given_a_movie_session(){
+        // given
+
+        Movie movie = new Movie();
+        String movieId = "63a00a4955506136f35be595";
+        movie.setMovieId(movieId);
+        movie.setMovieName("Avengers");
+        movie.setDescription("Action movie");
+        movie.setDuration(100);
+        movie.setThumbnailUrl("http://testurl");
+        movie.setMovieSessionIds(new ArrayList<>());
+        movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
+        given(movieRepository.findById(movieId)).willReturn(java.util.Optional.of(movie));
+
+
+        String cinemaId = "63a00a4955506136f35be596";
+        Cinema cinema = new Cinema();
+        cinema.setCinemaId(cinemaId);
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+
+        given(cinemaRepository.findById(cinemaId)).willReturn(java.util.Optional.of(cinema));
+
+
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setAvailableSeatings(new ArrayList<>());
+        movieSession.setCinemaId(cinemaId);
+        movieSession.setMovieId(movieId);
+        movieSession.setPricing(new ArrayList<>());
+
+        given(movieSessionRepository.save(movieSession)).willReturn(movieSession);
+
+
+        // when
+        MovieSession savedMovieSession = movieService.addMovieSession(movieSession);
+
+        // then
+        assertThat(savedMovieSession.getCinemaId(), equalTo(cinemaId));
+        assertThat(savedMovieSession.getDatetime(), equalTo(now));
+        assertThat(savedMovieSession.getAvailableSeatings(), empty());
+        assertThat(savedMovieSession.getMovieId(), equalTo(movieId));
+        assertThat(savedMovieSession.getPricing(), empty());
+
+        verify(movieSessionRepository).save(movieSession);
     }
 
 

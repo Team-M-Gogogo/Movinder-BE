@@ -1,8 +1,10 @@
 package com.movinder.be;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
+import com.movinder.be.entity.MovieSession;
 import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
-import java.util.List;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @SpringBootTest
@@ -218,6 +217,54 @@ public class MovieControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].floorPlan").isEmpty());
 
     }
+
+    @Test
+    public void should_create_movie_session_when_perform_create_given_movie_session_obj() throws Exception {
+        //given
+        Cinema cinema = new Cinema();
+        cinema.setAddress("address");
+        cinema.setCinemaName("MCL");
+        cinema.setFloorPlan(new ArrayList<>());
+        Cinema savedCinema = cinemaRepository.save(cinema);
+
+        Movie movie = new Movie();
+        movie.setMovieName("Avengers");
+        movie.setDescription("Action movie");
+        movie.setDuration(100);
+        movie.setThumbnailUrl("http://testurl");
+        movie.setMovieSessionIds(new ArrayList<>());
+        movie.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
+
+        Movie savedMovie = movieRepository.save(movie);
+
+        MovieSession movieSession = new MovieSession();
+        String start = "1970-01-01T00:00:00";
+        LocalDateTime now = LocalDateTime.parse(start);
+        movieSession.setDatetime(now);
+        movieSession.setCinemaId(savedCinema.getCinemaId());
+        movieSession.setMovieId(savedMovie.getMovieId());
+        movieSession.setPricing(new ArrayList<>());
+
+        String movieSessionJson = new ObjectMapper().registerModule(new JavaTimeModule()).writeValueAsString(movieSession);
+        System.out.println("tester");
+        System.out.println(movieSessionJson);
+
+        movieRepository.findById(savedMovie.getMovieId());
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.post("/movie/sessions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(movieSessionJson))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.sessionId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.datetime").value(start))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.availableSeatings").isEmpty())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cinemaId").value(savedCinema.getCinemaId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.movieId").value(savedMovie.getMovieId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.pricing").isEmpty());
+    }
+
 
 
 }
