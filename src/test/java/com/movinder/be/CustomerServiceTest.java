@@ -2,21 +2,13 @@ package com.movinder.be;
 
 import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
-import com.movinder.be.entity.Movie;
-import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.CustomerRepository;
-import com.movinder.be.repository.MovieRepository;
-import com.movinder.be.repository.MovieSessionRepository;
 import com.movinder.be.service.CustomerService;
-import com.movinder.be.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

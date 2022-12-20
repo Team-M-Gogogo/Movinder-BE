@@ -3,7 +3,6 @@ package com.movinder.be;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
-import com.movinder.be.entity.Movie;
 import com.movinder.be.repository.CustomerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,9 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @SpringBootTest
 @AutoConfigureMockMvc
