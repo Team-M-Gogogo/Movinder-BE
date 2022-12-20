@@ -22,6 +22,7 @@ public class Booking {
     private LocalDateTime bookingTime;
     private Integer total;
 
+
     public Booking(String customerId, String movieSessionId, ArrayList<String> ticketIds, ArrayList<String> foodIds, Integer total){
         this.customerId = customerId;
         this.movieSessionId = movieSessionId;
@@ -88,12 +89,33 @@ public class Booking {
     }
 
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof Booking)) return false;
+//        Booking booking = (Booking) o;
+//        return Objects.equals(getBookingId(), booking.getBookingId()) && getCustomerId().equals(booking.getCustomerId()) && getMovieSessionId().equals(booking.getMovieSessionId()) && getTicketIds().equals(booking.getTicketIds()) && getFoodIds().equals(booking.getFoodIds()) && Objects.equals(getBookingTime(), booking.getBookingTime()) && getTotal().equals(booking.getTotal());
+//    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Booking)) return false;
+
         Booking booking = (Booking) o;
-        return Objects.equals(getBookingId(), booking.getBookingId()) && getCustomerId().equals(booking.getCustomerId()) && getMovieSessionId().equals(booking.getMovieSessionId()) && getTicketIds().equals(booking.getTicketIds()) && getFoodIds().equals(booking.getFoodIds()) && Objects.equals(getBookingTime(), booking.getBookingTime()) && getTotal().equals(booking.getTotal());
+
+//        if (getBookingId() != null ? !getBookingId().equals(booking.getBookingId()) : booking.getBookingId() != null)
+//            return false;
+        if (!getCustomerId().equals(booking.getCustomerId())) return false;
+        if (!getMovieSessionId().equals(booking.getMovieSessionId())) return false;
+        if (!getTicketIds().equals(booking.getTicketIds())) return false;
+        if (!getFoodIds().equals(booking.getFoodIds())) return false;
+//        if (getBookingTime() != null ? !getBookingTime().equals(booking.getBookingTime()) : booking.getBookingTime() != null)
+//            return false;
+        if (!getTotal().equals(booking.getTotal())) return false;
+
+        return true;
     }
 
     @Override

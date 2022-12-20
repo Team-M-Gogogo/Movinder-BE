@@ -63,4 +63,16 @@ public class BookingController {
         return bookingService.createBooking(bookingRequest);
     }
 
+    @GetMapping("/orders/{customerID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Booking> getOrders(@PathVariable String customerID,
+                                   @RequestParam(defaultValue = DEFAULT_PAGE) Integer page,
+                                   @RequestParam(defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize,
+                                   @RequestParam(required = false) String from,
+                                   @RequestParam(required = false) String to,
+                                   @RequestParam(required = false, defaultValue = "true") Boolean ascending){
+        return bookingService.getBookingList(customerID, page, pageSize, from, to, ascending);
+    }
+
+
 }

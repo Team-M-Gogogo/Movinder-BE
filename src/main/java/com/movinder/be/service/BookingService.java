@@ -32,6 +32,8 @@ public class BookingService {
     private final MovieService movieService;
     private final CustomerService customerService;
 
+    private static final int DEFAULT_BOOKING_SEARCH_PERIOD = 3;
+
 
     public BookingService(TicketRepository ticketRepository,
                           BookingRepository bookingRepository,
@@ -192,6 +194,21 @@ public class BookingService {
             throw new MalformedRequestException("Booking quantity not match seatings requested");
         }
     }
+
+    public List<Booking> getBookingList(String customerId, Integer page, Integer pageSize, String from, String to, boolean ascending){
+
+        Utility.validateID(customerId);
+
+        LocalDateTime fromDate = from == null ? LocalDateTime.now().minusMonths(DEFAULT_BOOKING_SEARCH_PERIOD) : LocalDateTime.parse(from);
+        LocalDateTime toDate = to == null ? LocalDateTime.now() : LocalDateTime.parse(to);
+        Pageable pageable = PageRequest.of(page, pageSize, ascending ? Sort.Direction.ASC : Sort.Direction.DESC, "bookingTime");
+
+        return bookingRepository.findByCustomerIdAndBookingTimeBetween(customerId, fromDate, toDate, pageable);
+    }
+
+    /*
+    Checking
+     */
 
 
     // checks if object contains null attributes

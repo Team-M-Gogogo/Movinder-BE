@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
@@ -34,10 +35,6 @@ public class BookingServiceTest {
 
     @Mock
     FoodRepository foodRepository;
-    @Mock
-    CustomerRepository customerRepository;
-    @Mock
-    MovieSessionRepository movieSessionRepository;
     @Mock
     TicketRepository ticketRepository;
     @Mock
@@ -149,7 +146,6 @@ public class BookingServiceTest {
         customer.setShowGender(true);
         customer.setShowAge(true);
         customer.setShowStatus(true);
-        given(customerRepository.findById(customerId)).willReturn(java.util.Optional.of(customer));
 
         Food food = new Food();
         food.setFoodId(foodId);
@@ -185,7 +181,6 @@ public class BookingServiceTest {
             }
         });
 
-        given(movieSessionRepository.findById(movieSessionId)).willReturn(java.util.Optional.of(movieSession));
 
         ArrayList<ArrayList<Boolean>> updatedSeatings = new ArrayList<ArrayList<Boolean>>() {
             {
@@ -197,7 +192,6 @@ public class BookingServiceTest {
                 });
             }
         };
-        //todo check add movie session will update
 
         MovieSession movieSession2 = new MovieSession();
         movieSession2.setDatetime(now);
@@ -205,8 +199,6 @@ public class BookingServiceTest {
         movieSession2.setCinemaId("1");
         movieSession2.setMovieId("2");
         movieSession2.setPricing(new ArrayList<>());
-
-        given(movieSessionRepository.save(movieSession)).willReturn(movieSession2);
 
         Ticket ticket = new Ticket("adult", 10,  new Seat(0, 1));
         String ticketId = "63a00a4955506136f35be587";
@@ -220,14 +212,11 @@ public class BookingServiceTest {
                 new ArrayList<>(Arrays.asList(foodId)),
                 20);
 
-        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime localDateTime = LocalDateTime.parse("2020-10-10T00:00:00");
         mockBooking.setBookingTime(localDateTime);
         mockBooking.setBookingId("63a00a4955506136f35be588");
 
-        given(bookingRepository.save(new Booking(customerId, movieSessionId,
-                new ArrayList<>(Arrays.asList(ticketId)),
-                new ArrayList<>(Arrays.asList(foodId)), 20)))
-                .willReturn(mockBooking);
+        given(bookingRepository.save(mockBooking)).willReturn(mockBooking);
 
         given(customerService.findByCustomerId(customerId)).willReturn(customer);
 
@@ -237,7 +226,14 @@ public class BookingServiceTest {
         // when
         Booking booking = bookingService.createBooking(bookingRequest);
 
-        System.out.println(booking);
+
+        verify(foodRepository).findById(foodId);
+        verify(ticketRepository).findById(ticketId);
+        verify(bookingRepository).save(mockBooking);
+        verify(customerService).findByCustomerId(customerId);
+        verify(movieService).findMovieSessionById(movieSessionId);
+        verify(movieService).bookSeats(movieSessionId, bookingRequest.getSeatingRequests());
+
 
         // then
         assertThat(booking.getTotal(), equalTo(20));
@@ -247,5 +243,40 @@ public class BookingServiceTest {
         assertThat(booking.getTicketIds(), equalTo(new ArrayList<>(Arrays.asList(ticketId))));
         assertThat(booking.getMovieSessionId(), equalTo(movieSessionId));
         assertThat(booking.getBookingTime(), equalTo(localDateTime));
+
     }
+
+    @Test
+    public void should_return_bookings_when_by_get_bookings_given_a_customer_id(){
+        // given
+        String customerId = "639dab4f9370b716102e1294";
+        String foodId = "639dc14cb64fa559d6100d0c";
+        String ticketId = "639dc14cb64fa559d6100d0d";
+        String movieSessionId = "63a00a4955506136f35be596";
+
+        String from = "2022-11-10T12:00:00";
+        String to = "2022-11-10T23:50:50";
+        LocalDateTime fromDate = LocalDateTime.parse(from);
+        LocalDateTime toDate = LocalDateTime.parse(to);
+
+        Pageable pageable = PageRequest.of(0, 1, Sort.Direction.ASC, "bookingTime");
+
+        Booking mockBooking = new Booking(customerId, movieSessionId,
+                new ArrayList<>(Arrays.asList(ticketId)),
+                new ArrayList<>(Arrays.asList(foodId)),
+                20);
+
+
+        given(bookingRepository.findByCustomerIdAndBookingTimeBetween(customerId, fromDate, toDate, pageable)).willReturn(Arrays.asList(mockBooking));
+
+        // when
+        List<Booking> bookingList = bookingService.getBookingList(customerId, 0, 1, from, to, true);
+
+        // then
+        assertThat(Arrays.asList(mockBooking), equalTo(bookingList));
+
+        verify(bookingRepository).findByCustomerIdAndBookingTimeBetween(customerId, fromDate, toDate, pageable);
+    }
+
+
 }

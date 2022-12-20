@@ -260,5 +260,30 @@ public class BookingControllerTest {
     }
 
 
+
+    @Test
+    public void should_get_booking_when_perform_get_orders_given_customerID() throws Exception {
+        //given
+
+        Booking booking = new Booking("63a00a4955506136f35be595", "2", new ArrayList<>(Collections.singletonList("3")), new ArrayList<>(Collections.singletonList("4")), 10);
+        LocalDateTime time = LocalDateTime.now();
+        booking.setBookingTime(time);
+
+
+        Booking savedBooking = bookingRepository.save(booking);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/booking/orders/{customerID}", "63a00a4955506136f35be595"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookingId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerId").value("63a00a4955506136f35be595"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].movieSessionId").value("2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookingTime").value(time.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].ticketIds", Matchers.containsInAnyOrder("3")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].foodIds", Matchers.containsInAnyOrder("4")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(10));
+    }
+
 }
 
