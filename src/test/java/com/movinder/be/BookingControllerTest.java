@@ -2,7 +2,10 @@ package com.movinder.be;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.entity.Food;
+import com.movinder.be.entity.Seat;
+import com.movinder.be.entity.Ticket;
 import com.movinder.be.repository.FoodRepository;
+import com.movinder.be.repository.TicketRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class BookingControllerTest {
 
     @Autowired
     FoodRepository foodRepository;
+    @Autowired
+    TicketRepository ticketRepository;
 
     @BeforeEach
     public void clearDB() {
@@ -101,6 +106,23 @@ public class BookingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(10));
     }
 
+    @Test
+    public void should_return_a_ticket_when_get_ticket_by_id_given_a_ticket_id() throws Exception {
+        // given
+        Ticket ticket = new Ticket("adult", 10, new Seat(0,1));
+
+        // when
+        Ticket savedTicket = ticketRepository.save(ticket);
+
+        // then
+        client.perform(MockMvcRequestBuilders.get("/booking/tickets/{ticketID}", ticket.getTicketId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ticketId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ticketType").value("adult"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.seat.row").value(0))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.seat.column").value(1))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(10));
+    }
 
 }
 

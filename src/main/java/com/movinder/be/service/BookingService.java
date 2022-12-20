@@ -1,11 +1,13 @@
 package com.movinder.be.service;
 
 import com.movinder.be.entity.Food;
+import com.movinder.be.entity.Ticket;
 import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.FoodRepository;
+import com.movinder.be.repository.TicketRepository;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +20,13 @@ import java.util.stream.Stream;
 @Service
 public class BookingService {
     private final FoodRepository foodMongoRepository;
+    private final TicketRepository ticketRepository;
 
 
-
-    public BookingService(FoodRepository foodMongoRepository) {
+    public BookingService(TicketRepository ticketRepository,
+                          FoodRepository foodMongoRepository) {
         this.foodMongoRepository = foodMongoRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     /*
@@ -49,6 +53,17 @@ public class BookingService {
         } catch (DuplicateKeyException customerExist) {
             throw new ProvidedKeyAlreadyExistException("Food name");
         }
+    }
+
+    /*
+    Ticket
+     */
+
+    public Ticket findTicketById(String ticketId) {
+        Utility.validateID(ticketId);
+        return ticketRepository
+                .findById(ticketId)
+                .orElseThrow(() -> new IdNotFoundException("Ticket"));
     }
 
     // checks if object contains null attributes
