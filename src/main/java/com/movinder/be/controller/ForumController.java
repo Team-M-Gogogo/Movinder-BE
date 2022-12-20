@@ -27,4 +27,10 @@ public class ForumController {
         return forumService.addMessage(newMessage);
     }
 
+    @GetMapping("/rooms/{customerID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Room> getRoomByCustomerId(@PathVariable String customerID){
+        return forumService.getRoomByCustomerId(customerID);
+    }
+
 }

@@ -3,11 +3,12 @@ package com.movinder.be;
 import com.movinder.be.controller.dto.BookingRequest;
 import com.movinder.be.controller.dto.RequestItem;
 import com.movinder.be.entity.*;
-import com.movinder.be.repository.*;
+import com.movinder.be.repository.BookingRepository;
+import com.movinder.be.repository.FoodRepository;
+import com.movinder.be.repository.TicketRepository;
 import com.movinder.be.service.BookingService;
 import com.movinder.be.service.CustomerService;
 import com.movinder.be.service.MovieService;
-import com.movinder.be.service.Utility;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +27,6 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.sameInstance;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 

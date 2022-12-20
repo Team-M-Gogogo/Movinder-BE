@@ -1,12 +1,13 @@
 package com.movinder.be;
 
 import com.movinder.be.controller.dto.AddChatRequest;
-import com.movinder.be.entity.*;
+import com.movinder.be.entity.Customer;
+import com.movinder.be.entity.Message;
+import com.movinder.be.entity.Room;
 import com.movinder.be.repository.MessageRepository;
 import com.movinder.be.repository.RoomRepository;
 import com.movinder.be.service.CustomerService;
 import com.movinder.be.service.ForumService;
-import com.movinder.be.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,14 +16,13 @@ import org.mockito.Mockito;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -88,6 +88,23 @@ public class ForumServiceTest {
 
     }
 
+    @Test
+    public void should_return_a_list_of_room_when_get_room_by_customer_id_given_customer_id(){
+        // given
+        String customerId = "63a00a4955506136f35be595";
+        String roomId = "63a00a4955506136f35be596";
+        Room room = new Room(roomId, new ArrayList<>(), new ArrayList<>(), "63a00a4955506136f35be599");
+        given(roomRepository.findByCustomerIdsContaining(customerId)).willReturn(Arrays.asList(room));
+
+        // when
+        List<Room> fetchRoom = forumService.getRoomByCustomerId(customerId);
+
+        // then
+        assertThat(fetchRoom, equalTo(Arrays.asList(room)));
+
+
+        verify(roomRepository).findByCustomerIdsContaining(customerId);
+    }
 
 
 }

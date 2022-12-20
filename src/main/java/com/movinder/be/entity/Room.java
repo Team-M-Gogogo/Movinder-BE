@@ -33,6 +33,12 @@ public class Room {
         this.movieId = movieId;
     }
 
+    public Room(ArrayList<String> messageIds, ArrayList<String> customerIds, String movieId) {
+        this.messageIds = messageIds;
+        this.customerIds = customerIds;
+        this.movieId = movieId;
+    }
+
     public String getRoomId() {
         return roomId;
     }

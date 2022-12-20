@@ -47,4 +47,9 @@ public class ForumService {
         return savedMessage;
     }
 
+    public List<Room> getRoomByCustomerId(String customerId){
+        Utility.validateID(customerId);
+        customerService.findByCustomerId(customerId);
+        return roomRepository.findByCustomerIdsContaining(customerId);
+    }
 }

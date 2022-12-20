@@ -3,9 +3,10 @@ package com.movinder.be;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.controller.dto.AddChatRequest;
 import com.movinder.be.entity.Customer;
-import com.movinder.be.entity.Movie;
 import com.movinder.be.entity.Room;
-import com.movinder.be.repository.*;
+import com.movinder.be.repository.CustomerRepository;
+import com.movinder.be.repository.MessageRepository;
+import com.movinder.be.repository.RoomRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -74,6 +78,41 @@ public class ForumControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.customerId").value(savedCustomer.getCustomerId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("test message"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.createdTime").exists());
+    }
+
+    @Test
+    public void should_get_rooms_when_perform_find_room_by_customer_id_given_customer_id() throws Exception {
+        //given
+        Customer customer = new Customer();
+        customer.setCustomerName("name");
+        customer.setPassword("pass");
+        customer.setGender("Male");
+        customer.setStatus("available");
+        customer.setSelfIntro("intro");
+        customer.setAge(20);
+        customer.setShowName(false);
+        customer.setShowGender(true);
+        customer.setShowAge(true);
+        customer.setShowStatus(true);
+
+        Customer savedCustomer = customerRepository.save(customer);
+
+        Room room = new Room(new ArrayList<>(), new ArrayList<String>(){{add(savedCustomer.getCustomerId()); add("123123");}}, "63a00a4955506136f35be599");
+        Room savedRoom = roomRepository.save(room);
+        Room room2 = new Room(new ArrayList<>(), new ArrayList<String>(){{add(savedCustomer.getCustomerId());}}, "63a00a4955506136f35be560");
+        Room savedRoom2 = roomRepository.save(room2);
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/forum/rooms/{customerID}", savedCustomer.getCustomerId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roomId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roomId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].messageIds", empty()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].messageIds", empty()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].customerIds", containsInAnyOrder(new ArrayList<String>(){{add(savedCustomer.getCustomerId());}}, new ArrayList<String>(){{add(savedCustomer.getCustomerId()); add("123123");}})))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].movieId", containsInAnyOrder("63a00a4955506136f35be560", "63a00a4955506136f35be599")));
+
     }
 
 
