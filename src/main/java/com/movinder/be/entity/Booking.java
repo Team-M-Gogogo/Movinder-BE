@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Booking {
     @MongoId(FieldType.OBJECT_ID)
@@ -84,5 +85,19 @@ public class Booking {
 
     public void setTotal(Integer total) {
         this.total = total;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Booking)) return false;
+        Booking booking = (Booking) o;
+        return Objects.equals(getBookingId(), booking.getBookingId()) && getCustomerId().equals(booking.getCustomerId()) && getMovieSessionId().equals(booking.getMovieSessionId()) && getTicketIds().equals(booking.getTicketIds()) && getFoodIds().equals(booking.getFoodIds()) && Objects.equals(getBookingTime(), booking.getBookingTime()) && getTotal().equals(booking.getTotal());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBookingId(), getCustomerId(), getMovieSessionId(), getTicketIds(), getFoodIds(), getBookingTime(), getTotal());
     }
 }
