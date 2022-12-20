@@ -28,11 +28,11 @@ public class CustomerController {
         return customerService.authenticate(customerAuthenticateRequest);
     }
 
-//    @PutMapping
-//    @ResponseStatus(code = HttpStatus.OK)
-//    public Customer updateCustomer(@RequestBody Customer customer) {
-//        return customerService.updateCustomer(customer);
-//    }
+    @PutMapping
+    @ResponseStatus(code = HttpStatus.OK)
+    public Customer updateCustomer(@RequestBody Customer customer) {
+        return customerService.updateCustomer(customer);
+    }
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)

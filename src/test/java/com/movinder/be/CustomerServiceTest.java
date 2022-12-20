@@ -106,4 +106,44 @@ public class CustomerServiceTest {
         verify(customerRepository).findByCustomerName("name");
 
     }
+
+    @Test
+    public void should_return_an_updated_customer_when_update_customer_given_a_customer_modified(){
+        // given
+        Customer customer = new Customer();
+        customer.setCustomerId("63a00a4955506136f35be595");
+        customer.setCustomerName("name");
+        customer.setPassword("pass");
+        customer.setGender("Male");
+        customer.setStatus("available");
+        customer.setSelfIntro("intro");
+        customer.setAge(20);
+        customer.setShowName(false);
+        customer.setShowGender(true);
+        customer.setShowAge(true);
+        customer.setShowStatus(true);
+
+        given(customerRepository.existsById("63a00a4955506136f35be595")).willReturn(true);
+
+        given(customerRepository.save(customer)).willReturn(customer);
+
+        // when
+        Customer saveCustomer = customerService.updateCustomer(customer);
+
+        // then
+        assertThat(saveCustomer.getCustomerName(), equalTo("name"));
+        assertThat(saveCustomer.getPassword(), equalTo("pass"));
+        assertThat(saveCustomer.getGender(), equalTo("Male"));
+        assertThat(saveCustomer.getAge(), equalTo(20));
+        assertThat(saveCustomer.getStatus(), equalTo("available"));
+        assertThat(saveCustomer.getSelfIntro(), equalTo("intro"));
+        assertFalse(saveCustomer.getShowName());
+        assertTrue(saveCustomer.getShowGender());
+        assertTrue(saveCustomer.getShowAge());
+        assertTrue(saveCustomer.getShowStatus());
+
+        verify(customerRepository).existsById("63a00a4955506136f35be595");
+        verify(customerRepository).save(customer);
+
+    }
 }

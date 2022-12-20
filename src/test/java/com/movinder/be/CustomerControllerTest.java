@@ -106,4 +106,57 @@ public class CustomerControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.showAge").value(true))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.showStatus").value(true));
     }
+
+    @Test
+    public void should_update_customer_when_perform_update_customer_given_customer() throws Exception {
+        //given
+
+        Customer customer = new Customer();
+        customer.setCustomerName("name");
+        customer.setPassword("pass");
+        customer.setGender("Male");
+        customer.setStatus("available");
+        customer.setSelfIntro("intro");
+        customer.setAge(20);
+        customer.setShowName(false);
+        customer.setShowGender(true);
+        customer.setShowAge(true);
+        customer.setShowStatus(true);
+
+        Customer customerSaved = customerRepository.save(customer);
+
+        Customer updatedCustomer = new Customer();
+        updatedCustomer.setCustomerId(customerSaved.getCustomerId());
+        updatedCustomer.setCustomerName("name2");
+        updatedCustomer.setPassword("pass");
+        updatedCustomer.setGender("Male");
+        updatedCustomer.setStatus("available");
+        updatedCustomer.setSelfIntro("intro");
+        updatedCustomer.setAge(200);
+        updatedCustomer.setShowName(true);
+        updatedCustomer.setShowGender(true);
+        updatedCustomer.setShowAge(true);
+        updatedCustomer.setShowStatus(true);
+
+        String customerJson = new ObjectMapper().writeValueAsString(updatedCustomer);
+
+
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.put("/customers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.customerId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value("name2"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("pass"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Male"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(200))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("available"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.selfIntro").value("intro"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showName").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showGender").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showAge").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showStatus").value(true));
+    }
 }

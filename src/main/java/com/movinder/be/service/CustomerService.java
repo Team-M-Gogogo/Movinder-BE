@@ -4,6 +4,7 @@ package com.movinder.be.service;
 import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
 import com.movinder.be.exception.Customer.WrongCredentialsException;
+import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
@@ -51,6 +52,17 @@ public class CustomerService {
         } else {
             throw new WrongCredentialsException();
         }
+    }
+
+    public Customer updateCustomer(Customer customer) {
+
+        Utility.validateID(customer.getCustomerId());
+        validateCustomerAttributes(customer);
+        if (!customerMongoRepository.existsById(customer.getCustomerId())) {
+            throw new IdNotFoundException("Customer");
+        }
+        return customerMongoRepository.save(customer);
+
     }
 
     // checks if object contains null attributes
