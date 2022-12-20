@@ -1,6 +1,7 @@
 package com.movinder.be;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.repository.CustomerRepository;
@@ -13,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,6 +55,45 @@ public class CustomerControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(customerJson))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.customerId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value("name"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("pass"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.gender").value("Male"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.age").value(20))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("available"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.selfIntro").value("intro"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showName").value(false))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showGender").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showAge").value(true))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.showStatus").value(true));
+    }
+
+    @Test
+    public void should_get_customer_when_perform_authenticate_csutomer_given_name_and_password() throws Exception {
+        //given
+        CustomerAuthenticateRequest authenticateRequest = new CustomerAuthenticateRequest("name", "pass");
+
+        String customerAuthenticationJson = new ObjectMapper().writeValueAsString(authenticateRequest);
+
+        Customer customer = new Customer();
+        customer.setCustomerName("name");
+        customer.setPassword("pass");
+        customer.setGender("Male");
+        customer.setStatus("available");
+        customer.setSelfIntro("intro");
+        customer.setAge(20);
+        customer.setShowName(false);
+        customer.setShowGender(true);
+        customer.setShowAge(true);
+        customer.setShowStatus(true);
+
+        customerRepository.save(customer);
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.post("/customers/authenticate")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(customerAuthenticationJson))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.customerId").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.customerName").value("name"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password").value("pass"))

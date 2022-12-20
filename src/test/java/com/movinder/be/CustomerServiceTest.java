@@ -1,5 +1,6 @@
 package com.movinder.be;
 
+import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.repository.CinemaRepository;
@@ -65,5 +66,44 @@ public class CustomerServiceTest {
         assertTrue(saveCustomer.getShowStatus());
 
         verify(customerRepository).save(customer);
+    }
+
+    @Test
+    public void should_return_a_customer_when_authenticate_customer_given_a_password_and_username(){
+        // given
+        Customer customer = new Customer();
+        customer.setCustomerName("name");
+        customer.setPassword("pass");
+        customer.setGender("Male");
+        customer.setStatus("available");
+        customer.setSelfIntro("intro");
+        customer.setAge(20);
+        customer.setShowName(false);
+        customer.setShowGender(true);
+        customer.setShowAge(true);
+        customer.setShowStatus(true);
+
+        given(customerRepository.existsByCustomerName("name")).willReturn(true);
+
+        given(customerRepository.findByCustomerName("name")).willReturn(customer);
+
+        // when
+        Customer saveCustomer = customerService.authenticate(new CustomerAuthenticateRequest("name", "pass"));
+
+        // then
+        assertThat(saveCustomer.getCustomerName(), equalTo("name"));
+        assertThat(saveCustomer.getPassword(), equalTo("pass"));
+        assertThat(saveCustomer.getGender(), equalTo("Male"));
+        assertThat(saveCustomer.getAge(), equalTo(20));
+        assertThat(saveCustomer.getStatus(), equalTo("available"));
+        assertThat(saveCustomer.getSelfIntro(), equalTo("intro"));
+        assertFalse(saveCustomer.getShowName());
+        assertTrue(saveCustomer.getShowGender());
+        assertTrue(saveCustomer.getShowAge());
+        assertTrue(saveCustomer.getShowStatus());
+
+        verify(customerRepository).existsByCustomerName("name");
+        verify(customerRepository).findByCustomerName("name");
+
     }
 }

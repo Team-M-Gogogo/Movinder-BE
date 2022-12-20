@@ -1,7 +1,9 @@
 package com.movinder.be.service;
 
 
+import com.movinder.be.controller.dto.CustomerAuthenticateRequest;
 import com.movinder.be.entity.Customer;
+import com.movinder.be.exception.Customer.WrongCredentialsException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
@@ -34,6 +36,20 @@ public class CustomerService {
             return customerMongoRepository.save(customer);
         } catch (DuplicateKeyException customerExist) {
             throw new ProvidedKeyAlreadyExistException("Customer name");
+        }
+    }
+
+    public Customer authenticate(CustomerAuthenticateRequest customerAuthenticateRequest) {
+
+        if (!customerMongoRepository.existsByCustomerName(customerAuthenticateRequest.getUsername())) {
+            throw new WrongCredentialsException();
+        }
+
+        Customer customer = customerMongoRepository.findByCustomerName(customerAuthenticateRequest.getUsername());
+        if (customer.getPassword().equals(customerAuthenticateRequest.getPassword())) {
+            return customer;
+        } else {
+            throw new WrongCredentialsException();
         }
     }
 
