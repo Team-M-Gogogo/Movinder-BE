@@ -1,5 +1,7 @@
 package com.movinder.be.controller;
 
+import com.movinder.be.controller.dto.BookingRequest;
+import com.movinder.be.entity.Booking;
 import com.movinder.be.entity.Food;
 import com.movinder.be.entity.Ticket;
 import com.movinder.be.service.BookingService;
@@ -52,6 +54,13 @@ public class BookingController {
         return bookingService.findTicketById(ticketID);
     }
 
-
+    /*
+    Booking
+     */
+    @PostMapping("/orders")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Booking createBooking(@RequestBody BookingRequest bookingRequest){
+        return bookingService.createBooking(bookingRequest);
+    }
 
 }

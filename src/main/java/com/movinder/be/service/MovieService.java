@@ -3,8 +3,10 @@ package com.movinder.be.service;
 import com.movinder.be.entity.Cinema;
 import com.movinder.be.entity.Movie;
 import com.movinder.be.entity.MovieSession;
+import com.movinder.be.entity.Seat;
 import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
+import com.movinder.be.exception.MovieSession.SeatOccupiedExcpetion;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
 import com.movinder.be.repository.CinemaRepository;
@@ -137,6 +139,35 @@ public class MovieService {
     public List<MovieSession> findMovieSessionsByMovieId(String movieId){
         Utility.validateID(movieId);
         return movieSessionRepository.findByMovieId(movieId);
+    }
+
+    public MovieSession bookSeats(String sessionId, List<Seat> seats){
+        Utility.validateID(sessionId);
+        MovieSession session = movieSessionRepository
+                .findById(sessionId)
+                .orElseThrow(() -> new IdNotFoundException("Movie Session"));
+
+        ArrayList<ArrayList<Boolean>> avaialbleSeatings = session.getAvailableSeatings();
+
+        seats.forEach(seat -> {
+            int row = seat.getRow();
+            int col = seat.getColumn();
+            try {
+                Boolean available = avaialbleSeatings.get(row).get(col);
+                if (available) {
+                    avaialbleSeatings.get(row).set(col, false);
+                } else {
+                    throw new SeatOccupiedExcpetion(seat);
+                }
+            } catch (IndexOutOfBoundsException exception){
+                throw new MalformedRequestException("Requested seat not in floor plan, col: " + col + " row: " + row);
+            }
+
+        });
+
+        session.setAvailableSeatings(avaialbleSeatings);
+        return movieSessionRepository.save(session);
+
     }
 
 
