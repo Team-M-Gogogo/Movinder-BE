@@ -29,6 +29,7 @@ public class MovieService {
     private final CinemaRepository cinemaRepository;
     private final MovieRepository movieRepository;
     private final MovieSessionRepository movieSessionRepository;
+    private final ForumService forumService;
 
 
     private static final int DEFAULT_MOVIE_SEARCH_PERIOD = 3;
@@ -36,10 +37,12 @@ public class MovieService {
 
     public MovieService(CinemaRepository cinemaRepository,
                         MovieRepository movieRepository,
-                        MovieSessionRepository movieSessionRepository){
+                        MovieSessionRepository movieSessionRepository,
+                        ForumService forumService){
         this.movieRepository = movieRepository;
         this.cinemaRepository = cinemaRepository;
         this.movieSessionRepository = movieSessionRepository;
+        this.forumService = forumService;
 
     }
 
@@ -187,8 +190,7 @@ public class MovieService {
 
         try {
             Movie savedMovie = movieRepository.save(movie);
-            // auto add Room per new movie todo
-//            forumService.addChatRoom(savedMovie.getMovieId());
+            forumService.addChatRoom(savedMovie.getMovieId());
             return savedMovie;
         } catch (DuplicateKeyException customerExist) {
             throw new ProvidedKeyAlreadyExistException("Movie name");

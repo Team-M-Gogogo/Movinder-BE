@@ -6,6 +6,7 @@ import com.movinder.be.entity.MovieSession;
 import com.movinder.be.repository.CinemaRepository;
 import com.movinder.be.repository.MovieRepository;
 import com.movinder.be.repository.MovieSessionRepository;
+import com.movinder.be.service.ForumService;
 import com.movinder.be.service.MovieService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,8 @@ public class MovieServiceTest {
 
     @InjectMocks
     MovieService movieService;
+    @Mock
+    ForumService forumService;
 
     @Test
     public void should_return_a_Movie_when_add_movie_given_a_movie(){
@@ -54,8 +57,19 @@ public class MovieServiceTest {
         movie.setDuration(100);
         movie.setThumbnailUrl("http://testurl");
 
+        Movie movie2 = new Movie();
+        movie2.setMovieName("Avengers");
+        movie2.setDescription("Action movie");
+        movie2.setDuration(100);
+        movie2.setThumbnailUrl("http://testurl");
+        movie2.setMovieId("1");
+        movie2.setMovieSessionIds(new ArrayList<>());
+        movie2.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
 
-        given(movieRepository.save(movie)).willReturn(movie);
+
+        given(movieRepository.save(movie)).willReturn(movie2);
+
+        given(forumService.addChatRoom("1")).willReturn(null);
 
         // when
         Movie savedMovie = movieService.addMovie(movie);
