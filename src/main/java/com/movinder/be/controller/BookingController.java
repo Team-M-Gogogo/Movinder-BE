@@ -29,4 +29,11 @@ public class BookingController {
         return bookingService.getFood(foodName, page, pageSize);
     }
 
+    @PostMapping("/foods")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public Food addFood(@RequestBody Food food){
+        return bookingService.createFood(food);
+    }
+
+
 }

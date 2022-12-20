@@ -1,6 +1,7 @@
 package com.movinder.be;
 
 import com.movinder.be.entity.Food;
+import com.movinder.be.entity.Movie;
 import com.movinder.be.repository.FoodRepository;
 import com.movinder.be.service.BookingService;
 import org.junit.jupiter.api.Test;
@@ -11,11 +12,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -54,5 +58,25 @@ public class BookingServiceTest {
 
 
         verify(foodRepository).findByfoodNameIgnoringCaseContaining("coke", pageable);
+    }
+
+    @Test
+    public void should_return_a_food_when_create_food_given_a_food(){
+        // given
+        Food food = new Food();
+        food.setFoodName("coke");
+        food.setDescription("1L");
+        food.setPrice(10);
+
+
+        given(foodRepository.save(food)).willReturn(food);
+
+        // when
+        Food savedFood = bookingService.createFood(food);
+
+        // then
+        assertThat(savedFood, equalTo(food));
+
+        verify(foodRepository).save(food);
     }
 }
