@@ -2,7 +2,6 @@ package com.movinder.be;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.entity.Food;
-import com.movinder.be.entity.Movie;
 import com.movinder.be.repository.FoodRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,6 +75,26 @@ public class BookingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(foodJson))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.foodId").isString())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.foodName").value("coke"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("1L"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(10));
+    }
+
+    @Test
+    public void should_return_a_food_when_get_food_by_id_given_a_food_id() throws Exception {
+        // given
+        Food food = new Food();
+        food.setFoodName("coke");
+        food.setDescription("1L");
+        food.setPrice(10);
+
+        // when
+        Food savedFood = foodRepository.save(food);
+
+        // then
+        client.perform(MockMvcRequestBuilders.get("/booking/foods/{foodId}", food.getFoodId()))
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.foodId").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.foodName").value("coke"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.description").value("1L"))

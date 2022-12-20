@@ -1,6 +1,7 @@
 package com.movinder.be.service;
 
 import com.movinder.be.entity.Food;
+import com.movinder.be.exception.IdNotFoundException;
 import com.movinder.be.exception.MalformedRequestException;
 import com.movinder.be.exception.ProvidedKeyAlreadyExistException;
 import com.movinder.be.exception.RequestDataNotCompleteException;
@@ -31,6 +32,11 @@ public class BookingService {
     public List<Food> getFood(String foodName, Integer page, Integer pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         return foodMongoRepository.findByfoodNameIgnoringCaseContaining(foodName, pageable);
+    }
+
+    public Food findFoodById(String foodId) {
+        Utility.validateID(foodId);
+        return foodMongoRepository.findById(foodId).orElseThrow(() -> new IdNotFoundException("Food"));
     }
 
     public Food createFood(Food food) {

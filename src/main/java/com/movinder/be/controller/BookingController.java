@@ -35,5 +35,12 @@ public class BookingController {
         return bookingService.createFood(food);
     }
 
+    @GetMapping("/foods/{foodID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Food getFoodById(@PathVariable String foodID){
+
+        return bookingService.findFoodById(foodID);
+    }
+
 
 }

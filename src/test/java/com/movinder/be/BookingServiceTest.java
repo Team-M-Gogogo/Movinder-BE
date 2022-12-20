@@ -79,4 +79,25 @@ public class BookingServiceTest {
 
         verify(foodRepository).save(food);
     }
+
+    @Test
+    public void should_return_a_food_when_by_food_by_id_given_a_food_id(){
+        // given
+        Food food = new Food();
+        food.setFoodId("63a00a4955506136f35be595");
+        food.setFoodName("coke");
+        food.setDescription("1L");
+        food.setPrice(10);
+
+
+        given(foodRepository.findById("63a00a4955506136f35be595")).willReturn(java.util.Optional.of(food));
+
+        // when
+        Food savedFood = bookingService.findFoodById("63a00a4955506136f35be595");
+
+        // then
+        assertThat(savedFood, equalTo(food));
+
+        verify(foodRepository).findById("63a00a4955506136f35be595");
+    }
 }
