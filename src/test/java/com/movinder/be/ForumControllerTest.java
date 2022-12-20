@@ -3,6 +3,7 @@ package com.movinder.be;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.movinder.be.controller.dto.AddChatRequest;
 import com.movinder.be.entity.Customer;
+import com.movinder.be.entity.Message;
 import com.movinder.be.entity.Room;
 import com.movinder.be.repository.CustomerRepository;
 import com.movinder.be.repository.MessageRepository;
@@ -112,6 +113,33 @@ public class ForumControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].messageIds", empty()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].customerIds", containsInAnyOrder(new ArrayList<String>(){{add(savedCustomer.getCustomerId());}}, new ArrayList<String>(){{add(savedCustomer.getCustomerId()); add("123123");}})))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].movieId", containsInAnyOrder("63a00a4955506136f35be560", "63a00a4955506136f35be599")));
+
+    }
+
+    @Test
+    public void should_get_messages_when_perform_get_message_by_id_given_movie_id() throws Exception {
+        //given
+
+
+        String movieId = "63a00a4955506136f35be596";
+
+        Message message = new Message("63a00a4955506136f35be597", "test");
+        Message savedMessage = messageRepository.save(message);
+        Message message2 = new Message("63a00a4955506136f35be597", "test2");
+        Message savedMessage2 = messageRepository.save(message2);
+
+        Room room = new Room(new ArrayList<String>(){{add(savedMessage.getMessageId()); add(savedMessage2.getMessageId());}}, new ArrayList<>(), movieId);
+        Room savedRoom = roomRepository.save(room);
+
+        //when & then
+        client.perform(MockMvcRequestBuilders.get("/forum/rooms?movieID={movieID}", movieId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].messageId").value(savedMessage.getMessageId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].messageId").value(savedMessage2.getMessageId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerId").value("63a00a4955506136f35be597"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].customerId").value("63a00a4955506136f35be597"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].message", containsInAnyOrder("test", "test2")))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].createdTime").exists());
 
     }
 

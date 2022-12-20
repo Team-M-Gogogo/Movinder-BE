@@ -23,6 +23,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.platform.commons.util.Preconditions.notNull;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 
@@ -104,6 +105,35 @@ public class ForumServiceTest {
 
 
         verify(roomRepository).findByCustomerIdsContaining(customerId);
+    }
+
+    @Test
+    public void should_return_a_list_of_message_when_get_room_by_movie_id_given_movie_id(){
+        // given
+        String customerId = "63a00a4955506136f35be595";
+        String roomId = "63a00a4955506136f35be596";
+        String messageId = "63a00a4955506136f35be597";
+        String movieId = "63a00a4955506136f35be599";
+        LocalDateTime time = LocalDateTime.now();
+        Room room = new Room(roomId, new ArrayList<String>(){{add(messageId);}}, new ArrayList<>(), movieId);
+        given(roomRepository.findByMovieId(movieId)).willReturn(java.util.Optional.of(room));
+        given(roomRepository.findById(roomId)).willReturn(java.util.Optional.of(room));
+        given(messageRepository.findById(messageId)).willReturn(java.util.Optional.of(new Message(messageId, customerId, "test", time)));
+
+
+        // when
+        List<Message> fetchMessages = forumService.getRoomMessageByMovieId(movieId);
+
+        // then
+        assertThat(fetchMessages.get(0).getMessageId(), equalTo(messageId));
+        assertThat(fetchMessages.get(0).getCustomerId(), equalTo(customerId));
+        assertThat(fetchMessages.get(0).getMessage(), equalTo("test"));
+        assertThat(fetchMessages.get(0).getCreatedTime(), equalTo(time));
+
+        verify(roomRepository).findByMovieId(movieId);
+        verify(roomRepository).findById(roomId);
+        verify(messageRepository).findById(messageId);
+
     }
 
 

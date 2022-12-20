@@ -33,4 +33,23 @@ public class ForumController {
         return forumService.getRoomByCustomerId(customerID);
     }
 
+    @GetMapping("/rooms")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<Message> getMessageByMovieId(@RequestParam(defaultValue = "") String movieID,
+                                             @RequestParam(defaultValue = "") String roomID){
+
+        if (roomID.equals("") && movieID.equals("")){
+            throw new MalformedRequestException("Message request should contain either movieId or roomId as param, none provided");
+        }
+        if (!roomID.equals("") && !movieID.equals("")){
+            throw new MalformedRequestException("Message request should contain either movieId or roomId as param, both provided");
+        }
+        if (!roomID.equals("")){
+            return forumService.getRoomMessagesByRoomId(roomID);
+        } else{
+            return forumService.getRoomMessageByMovieId(movieID);
+        }
+
+    }
+
 }

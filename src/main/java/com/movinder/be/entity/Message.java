@@ -15,10 +15,21 @@ public class Message {
     private String message;
     private LocalDateTime createdTime;
 
+    public Message(){
+
+    }
+
     public Message(String customerId, String message){
         this.customerId = customerId;
         this.message = message;
         this.createdTime = LocalDateTime.now();
+    }
+
+    public Message(String messageId, String customerId, String message, LocalDateTime createdTime) {
+        this.messageId = messageId;
+        this.customerId = customerId;
+        this.message = message;
+        this.createdTime = createdTime;
     }
 
     public String getMessageId() {

@@ -47,6 +47,26 @@ public class ForumService {
         return savedMessage;
     }
 
+    public Message findMessageById(String messageId){
+        return messageRepository.findById(messageId).orElseThrow(() -> new IdNotFoundException("Message"));
+    }
+
+    public List<Message> getRoomMessageByMovieId(String movieId){
+        Utility.validateID(movieId);
+        Room room = roomRepository.findByMovieId(movieId).orElseThrow(() -> new IdNotFoundException("Movie"));
+        return getRoomMessagesByRoomId(room.getRoomId());
+    }
+
+    public List<Message> getRoomMessagesByRoomId(String roomId){
+        Utility.validateID(roomId);
+        Room room = findRoomById(roomId);
+        return room.getMessageIds()
+                .stream()
+                .map(this::findMessageById)
+                .sorted(Comparator.comparing(Message::getEpochTime))
+                .collect(Collectors.toList());
+    }
+
     public List<Room> getRoomByCustomerId(String customerId){
         Utility.validateID(customerId);
         customerService.findByCustomerId(customerId);
