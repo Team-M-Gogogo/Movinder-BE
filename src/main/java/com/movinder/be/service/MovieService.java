@@ -18,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -99,7 +96,7 @@ public class MovieService {
 
 
         MovieSession savedMovieSession = movieSessionRepository.save(movieSession);
-        savedMovieSession.getMovieId();
+//        savedMovieSession.getMovieId();
         updateMovieInfo(savedMovieSession);
 
         return savedMovieSession;
@@ -108,7 +105,6 @@ public class MovieService {
     // update lastShowTime and session ID
     private void updateMovieInfo(MovieSession movieSession){
 
-        System.out.println("test" + movieSession.getMovieId());
         Movie movie = movieRepository
                 .findById(movieSession.getMovieId())
                 .orElseThrow(() -> new IdNotFoundException("Movie"));
@@ -134,6 +130,7 @@ public class MovieService {
         return findMovieSessionsByMovieId(movieId)
                 .stream()
                 .filter(movieSessions -> movieSessions.getCinemaId().equals(cinemaId))
+                .sorted(Comparator.comparing(MovieSession::getDatetime))
                 .collect(Collectors.toList());
     }
 
