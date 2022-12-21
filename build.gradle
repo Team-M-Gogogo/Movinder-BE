@@ -13,6 +13,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo:3.5.3'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
 }
 
 group = 'com.teammgogogo'
