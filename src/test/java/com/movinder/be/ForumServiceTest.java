@@ -70,12 +70,13 @@ public class ForumServiceTest {
 
         given(messageRepository.save(Mockito.any(Message.class))).willReturn(mockMessage);
 
-        String roomId = "63a00a4955506136f35be596";
-        Room room = new Room(roomId, new ArrayList<>(), new ArrayList<>(), "63a00a4955506136f35be599");
-        given(roomRepository.findById(roomId)).willReturn(java.util.Optional.of(room));
+        String roomId = "53a00a4955506136f35be596";
+        String movieId = "63a00a4955506136f35be596";
+        Room room = new Room(roomId, new ArrayList<>(), new ArrayList<>(), movieId);
+        given(roomRepository.findByMovieId(movieId)).willReturn(java.util.Optional.of(room));
 
         // when
-        Message savedMessage = forumService.addMessage(new AddChatRequest(customerId, "test", roomId));
+        Message savedMessage = forumService.addMessage(new AddChatRequest(customerId, "test", movieId));
 
         // then
         assertThat(savedMessage.getMessage(), equalTo("test"));
@@ -85,7 +86,7 @@ public class ForumServiceTest {
 
         verify(customerService).findByCustomerId(customerId);
         verify(messageRepository).save(Mockito.any(Message.class));
-        verify(roomRepository).findById(roomId);
+        verify(roomRepository).findByMovieId(movieId);
 
     }
 

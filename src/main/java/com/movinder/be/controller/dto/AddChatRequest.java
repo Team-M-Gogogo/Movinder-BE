@@ -3,12 +3,12 @@ package com.movinder.be.controller.dto;
 public class AddChatRequest {
     private String customerId;
     private String message;
-    private String roomId;
+    private String movieId;
 
-    public AddChatRequest(String customerId, String message, String roomId){
+    public AddChatRequest(String customerId, String message, String movieId){
         this.customerId = customerId;
         this.message = message;
-        this.roomId = roomId;
+        this.movieId = movieId;
     }
 
     public String getCustomerId() {
@@ -27,11 +27,11 @@ public class AddChatRequest {
         this.message = message;
     }
 
-    public String getRoomId() {
-        return roomId;
+    public String getMovieId() {
+        return movieId;
     }
 
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 }

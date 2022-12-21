@@ -65,7 +65,7 @@ public class ForumControllerTest {
         Room room = new Room(roomId, new ArrayList<>(), new ArrayList<>(), "63a00a4955506136f35be599");
         Room savedRoom = roomRepository.save(room);
 
-        AddChatRequest addChatRequest = new AddChatRequest(savedCustomer.getCustomerId(), "test message", savedRoom.getRoomId());
+        AddChatRequest addChatRequest = new AddChatRequest(savedCustomer.getCustomerId(), "test message", "63a00a4955506136f35be599");
 
         String chatRequestJson = new ObjectMapper().writeValueAsString(addChatRequest);
 
