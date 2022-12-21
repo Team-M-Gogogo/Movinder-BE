@@ -4,3 +4,10 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/movinder
+##       uri: mongodb://mongo:vGFTRxQPRWUk3PSRq4ap@containers-us-west-140.railway.app:6832/movinder
+#       authentication-database: admin
+#       username: mongo
+#       password: vGFTRxQPRWUk3PSRq4ap
+#       database: movinder
+#       port: 6832
+#       host: containers-us-west-140.railway.app

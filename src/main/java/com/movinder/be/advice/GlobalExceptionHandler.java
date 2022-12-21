@@ -2,6 +2,7 @@ package com.movinder.be.advice;
 
 import com.movinder.be.exception.*;
 import com.movinder.be.exception.Customer.WrongCredentialsException;
+import com.movinder.be.exception.MovieSession.SeatOccupiedExcpetion;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -30,5 +31,12 @@ public class GlobalExceptionHandler {
     public ErrorResponse authenticationError(Exception exception) {
         return new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), exception.getMessage());
     }
+
+    @ExceptionHandler({SeatOccupiedExcpetion.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse SeatOccupiedError(Exception exception) {
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), exception.getMessage());
+    }
+
 
 }
