@@ -39,7 +39,7 @@ public class ForumService {
         customerService.findByCustomerId(newMessage.getCustomerId()); //validate ID
         Message savedMessage = messageRepository.save(new Message(newMessage.getCustomerId(), newMessage.getMessage()));
 
-        Room room = roomRepository.findByMovieId(newMessage.getMovieId()).orElseThrow(() -> new IdNotFoundException("Room"));
+        Room room = roomRepository.findByMovieId(newMessage.getMovieId()).orElseThrow(() -> new IdNotFoundException("Movie ID -> Room ID"));
         room.addMessageId(savedMessage.getMessageId());
         room.addCustomerId(newMessage.getCustomerId());
         roomRepository.save(room);

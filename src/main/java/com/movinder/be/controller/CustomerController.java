@@ -40,4 +40,11 @@ public class CustomerController {
         return "SUCCESS: Server is running";
     }
 
+    @GetMapping("/{customerID}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public Customer getCustomerByID(@PathVariable String customerID){
+
+        return customerService.findByCustomerId(customerID);
+    }
+
 }
