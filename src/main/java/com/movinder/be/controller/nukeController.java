@@ -171,9 +171,15 @@ public class nukeController {
 
         bookingService.createBooking(br);
 
-        BookingRequest br2 = new BookingRequest(customer2.getCustomerId(), cinema2session2movie2.getSessionId(), requestTicketItems, requestFoodItems, seats);
 
-        bookingService.createBooking(br2);
+
+        ArrayList<RequestItem> requestTicketItems2 = new ArrayList<RequestItem>( Arrays.asList(new RequestItem("Adult", 2), new RequestItem("Child", 1)));
+        ArrayList<RequestItem> requestFoodItems2 =  new ArrayList<RequestItem>( Arrays.asList(new RequestItem(food1.getFoodId(), 1), new RequestItem(food2.getFoodId(), 2)));
+        ArrayList<Seat> seats2 = new ArrayList<>( Arrays.asList(new Seat(0, 1), new Seat(0,2), new Seat(0,3)));
+
+//        BookingRequest br2 = new BookingRequest(customer2.getCustomerId(), cinema2session2movie2.getSessionId(), requestTicketItems2, requestFoodItems2, seats2);
+
+//        bookingService.createBooking(br2);
 
         return "Done";
     }
@@ -214,3 +220,69 @@ public class nukeController {
 
     }
 }
+
+/*
+
+
+{
+  "foodName": "Hot Dog",
+  "description": "Jeng",
+  "price": 50,
+  "thumbnailUrl": "https://th.bing.com/th/id/OIP.kEj2aNgTCm53hXNdBxOMsAHaGU?pid=ImgDet&rs=1",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Popcorn Set",
+  "description": "1L Pepsi x2 + popcorn",
+  "price": 100,
+  "thumbnailUrl": "https://fox5theatre.com/wp-content/uploads/2020/03/PopcornCombo.jpg",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Popcorn",
+  "description": "Golden popcorn",
+  "price": 60,
+  "thumbnailUrl": "https://th.bing.com/th/id/OIP.y6fsVN2cbfgjA7ycHJojkgAAAA?pid=ImgDet&rs=1",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Hot Dog Set",
+  "description": "1L Pepsi + Hot Dog",
+  "price": 60,
+  "thumbnailUrl": "https://res.cloudinary.com/hio22hxcn/image/upload/fl_lossy,f_auto,q_auto,w_auto/v1508313418/yb5zdvg9g4dg2bb2307p.jpg",
+  "_class": "com.movinder.be.entity.Food"
+}
+ */
+
+/*
+
+
+{
+  "foodName": "Hot Dog",
+  "description": "Jeng",
+  "price": 50,
+  "thumbnailUrl": "https://th.bing.com/th/id/OIP.kEj2aNgTCm53hXNdBxOMsAHaGU?pid=ImgDet&rs=1",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Popcorn Set",
+  "description": "1L Pepsi x2 + popcorn",
+  "price": 100,
+  "thumbnailUrl": "https://fox5theatre.com/wp-content/uploads/2020/03/PopcornCombo.jpg",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Popcorn",
+  "description": "Golden popcorn",
+  "price": 60,
+  "thumbnailUrl": "https://th.bing.com/th/id/OIP.y6fsVN2cbfgjA7ycHJojkgAAAA?pid=ImgDet&rs=1",
+  "_class": "com.movinder.be.entity.Food"
+}
+{
+  "foodName": "Hot Dog Set",
+  "description": "1L Pepsi + Hot Dog",
+  "price": 60,
+  "thumbnailUrl": "https://res.cloudinary.com/hio22hxcn/image/upload/fl_lossy,f_auto,q_auto,w_auto/v1508313418/yb5zdvg9g4dg2bb2307p.jpg",
+  "_class": "com.movinder.be.entity.Food"
+}
+ */
