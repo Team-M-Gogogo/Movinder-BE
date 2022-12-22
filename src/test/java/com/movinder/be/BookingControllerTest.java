@@ -266,7 +266,7 @@ public class BookingControllerTest {
         //given
 
         Booking booking = new Booking("63a00a4955506136f35be595", "2", new ArrayList<>(Collections.singletonList("3")), new ArrayList<>(Collections.singletonList("4")), 10);
-        LocalDateTime time = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.parse("2022-11-11T00:00:00");
         booking.setBookingTime(time);
 
 
@@ -279,7 +279,7 @@ public class BookingControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookingId").isString())
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].customerId").value("63a00a4955506136f35be595"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].movieSessionId").value("2"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookingTime").value(time.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].bookingTime").value("2022-11-11T00:00:00"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].ticketIds", Matchers.containsInAnyOrder("3")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].foodIds", Matchers.containsInAnyOrder("4")))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].total").value(10));
