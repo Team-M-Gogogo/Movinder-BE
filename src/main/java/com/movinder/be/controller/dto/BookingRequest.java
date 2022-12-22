@@ -11,6 +11,17 @@ public class BookingRequest {
     private ArrayList<RequestItem> foodRequestItems;
     private ArrayList<Seat> seatingRequests;
 
+    public BookingRequest() {
+    }
+
+    public BookingRequest(String customerId, String movieSessionId, ArrayList<RequestItem> ticketRequestItems, ArrayList<RequestItem> foodRequestItems, ArrayList<Seat> seatingRequests) {
+        this.customerId = customerId;
+        this.movieSessionId = movieSessionId;
+        this.ticketRequestItems = ticketRequestItems;
+        this.foodRequestItems = foodRequestItems;
+        this.seatingRequests = seatingRequests;
+    }
+
     public String getCustomerId() {
         return customerId;
     }

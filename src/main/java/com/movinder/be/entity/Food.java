@@ -15,6 +15,16 @@ public class Food {
     private Integer price;
     private String thumbnailUrl;
 
+    public Food() {
+    }
+
+    public Food(String foodName, String description, Integer price, String thumbnailUrl) {
+        this.foodName = foodName;
+        this.description = description;
+        this.price = price;
+        this.thumbnailUrl = thumbnailUrl;
+    }
+
     public String getFoodId() {
         return foodId;
     }

@@ -24,6 +24,17 @@ public class Movie {
     private String thumbnailUrl;
     private String trailerUrl;
 
+    public Movie() {
+    }
+
+    public Movie(String movieName, String description, Integer duration, String thumbnailUrl, String trailerUrl) {
+        this.movieName = movieName;
+        this.description = description;
+        this.duration = duration;
+        this.thumbnailUrl = thumbnailUrl;
+        this.trailerUrl = trailerUrl;
+    }
+
     public String getMovieId() {
         return movieId;
     }

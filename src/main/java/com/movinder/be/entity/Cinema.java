@@ -16,6 +16,8 @@ public class Cinema {
     private String address;
     private ArrayList<ArrayList<Boolean>> floorPlan;
 
+
+
     public String getCinemaId() {
         return cinemaId;
     }

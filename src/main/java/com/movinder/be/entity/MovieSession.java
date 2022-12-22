@@ -21,6 +21,16 @@ public class MovieSession {
     private String movieId;
     private ArrayList<Pricing> pricing;
 
+    public MovieSession(LocalDateTime datetime, String cinemaId, String movieId, ArrayList<Pricing> pricing) {
+        this.datetime = datetime;
+        this.cinemaId = cinemaId;
+        this.movieId = movieId;
+        this.pricing = pricing;
+    }
+
+    public MovieSession() {
+    }
+
     public String getMovieId() {
         return movieId;
     }

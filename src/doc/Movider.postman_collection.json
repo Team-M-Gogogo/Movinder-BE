@@ -291,7 +291,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\"sessionId\":null,\"datetime\":\"1972-01-01T00:00:00\",\"availableSeatings\":null,\"cinemaId\":\"639fffd359aab33beac6d5ce\",\"movieId\":\"639ffbf1cccffb49470ac95d\",\"pricing\":[]}\n",
+							"raw": "{\n    \"sessionId\": null,\n    \"datetime\": \"1972-01-01T00:00:00\",\n    \"availableSeatings\": null,\n    \"cinemaId\": \"639fffd359aab33beac6d5ce\",\n    \"movieId\": \"639ffbf1cccffb49470ac95d\",\n    \"pricing\": []\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -718,6 +718,46 @@
 								"forum",
 								"rooms",
 								"639dab4f9370b716102e1294"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Nuke",
+			"item": [
+				{
+					"name": "delete all",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/nuke",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"nuke"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate mock data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/nuke/generate",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"nuke",
+								"generate"
 							]
 						}
 					},
