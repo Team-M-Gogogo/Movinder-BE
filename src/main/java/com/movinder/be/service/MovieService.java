@@ -31,6 +31,11 @@ public class MovieService {
     private final MovieSessionRepository movieSessionRepository;
     private final ForumService forumService;
 
+    public void deleteAll() {
+        cinemaRepository.deleteAll();
+        movieRepository.deleteAll();
+        movieSessionRepository.deleteAll();
+    }
 
     private static final int DEFAULT_MOVIE_SEARCH_PERIOD = 3;
 
@@ -261,5 +266,8 @@ public class MovieService {
         }
 
     }
+
+
+
 
 }

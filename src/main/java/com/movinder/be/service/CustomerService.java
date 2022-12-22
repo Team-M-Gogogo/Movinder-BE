@@ -23,6 +23,10 @@ public class CustomerService {
         this.customerMongoRepository = customerMongoRepository;
     }
 
+    public void deleteAll() {
+        customerMongoRepository.deleteAll();
+    }
+
 
     public Customer createCustomerAccount(Customer customer) {
 

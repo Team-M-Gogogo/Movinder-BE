@@ -24,6 +24,11 @@ public class ForumService {
         this.customerService = customerService;
     }
 
+    public void deleteAll() {
+        messageRepository.deleteAll();
+        roomRepository.deleteAll();
+    }
+
     // add Chat room
     public Room addChatRoom(String movieId){
         return roomRepository.save(new Room(movieId));

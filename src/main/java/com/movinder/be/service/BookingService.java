@@ -48,6 +48,12 @@ public class BookingService {
 
     }
 
+    public void deleteAll() {
+        foodMongoRepository.deleteAll();
+        ticketRepository.deleteAll();
+        bookingRepository.deleteAll();
+    }
+
     /*
     Food
      */
