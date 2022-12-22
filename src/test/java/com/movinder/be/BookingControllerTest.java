@@ -53,7 +53,7 @@ public class BookingControllerTest {
         foodRepository.deleteAll();
         ticketRepository.deleteAll();
         foodRepository.deleteAll();
-        movieSessionRepository.deleteAll();;
+        movieSessionRepository.deleteAll();
         customerRepository.deleteAll();
         movieRepository.deleteAll();
         bookingRepository.deleteAll();
@@ -95,6 +95,7 @@ public class BookingControllerTest {
         food.setFoodName("coke");
         food.setDescription("1L");
         food.setPrice(10);
+        food.setThumbnailUrl("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg");
 
 
         String foodJson = new ObjectMapper().writeValueAsString(food);

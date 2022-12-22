@@ -224,7 +224,9 @@ public class MovieService {
                         movie.getDescription(),
                         movie.getDuration(),
                         movie.getLastShowDateTime(),
-                        movie.getThumbnailUrl())
+                        movie.getThumbnailUrl(),
+                        movie.getThumbnailUrl(),
+                        movie.getTrailerUrl())
                 .anyMatch(Objects::isNull);
 
         if (containsNull){

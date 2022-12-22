@@ -215,7 +215,7 @@ public class BookingService {
     private void validateFoodAttributes(Food food) {
 
         boolean containsNull = Stream
-                .of(food.getFoodName(), food.getPrice(), food.getDescription())
+                .of(food.getFoodName(), food.getPrice(), food.getDescription(), food.getThumbnailUrl())
                 .anyMatch(Objects::isNull);
 
         if (containsNull) {

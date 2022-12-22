@@ -37,7 +37,7 @@ public class CustomerController {
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public String test() {
-        return "SUCCESS: Server is running";
+        return "SUCCESS: Server is running locally";
     }
 
     @GetMapping("/{customerID}")

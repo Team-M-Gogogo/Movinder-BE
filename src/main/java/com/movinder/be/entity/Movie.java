@@ -22,6 +22,7 @@ public class Movie {
     @Indexed
     private LocalDateTime lastShowDateTime;
     private String thumbnailUrl;
+    private String trailerUrl;
 
     public String getMovieId() {
         return movieId;
@@ -77,5 +78,13 @@ public class Movie {
 
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public String getTrailerUrl() {
+        return trailerUrl;
+    }
+
+    public void setTrailerUrl(String trailerUrl) {
+        this.trailerUrl = trailerUrl;
     }
 }

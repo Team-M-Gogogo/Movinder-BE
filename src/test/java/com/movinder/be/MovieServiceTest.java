@@ -56,6 +56,7 @@ public class MovieServiceTest {
         movie.setDescription("Action movie");
         movie.setDuration(100);
         movie.setThumbnailUrl("http://testurl");
+        movie.setTrailerUrl("https://www.youtube.com/watch?v=GqWbeWBCBXs&ab_channel=EasonChan");
 
         Movie movie2 = new Movie();
         movie2.setMovieName("Avengers");
@@ -65,7 +66,7 @@ public class MovieServiceTest {
         movie2.setMovieId("1");
         movie2.setMovieSessionIds(new ArrayList<>());
         movie2.setLastShowDateTime(LocalDateTime.ofEpochSecond(0, 0, ZoneOffset.ofHours(0)));
-
+        movie2.setTrailerUrl("https://www.youtube.com/watch?v=GqWbeWBCBXs&ab_channel=EasonChan");
 
         given(movieRepository.save(movie)).willReturn(movie2);
 

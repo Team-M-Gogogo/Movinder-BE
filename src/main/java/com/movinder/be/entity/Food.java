@@ -13,6 +13,7 @@ public class Food {
     private String foodName;
     private String description;
     private Integer price;
+    private String thumbnailUrl;
 
     public String getFoodId() {
         return foodId;
@@ -44,5 +45,13 @@ public class Food {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public void setThumbnailUrl(String thumbnailUrl) {
+        this.thumbnailUrl = thumbnailUrl;
     }
 }

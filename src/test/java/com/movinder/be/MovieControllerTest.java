@@ -59,6 +59,7 @@ public class MovieControllerTest {
         movie.setDescription("Action movie");
         movie.setDuration(100);
         movie.setThumbnailUrl("http://testurl");
+        movie.setTrailerUrl("https://www.youtube.com/watch?v=GqWbeWBCBXs&ab_channel=EasonChan");
 
         String movieJson = new ObjectMapper().writeValueAsString(movie);
 

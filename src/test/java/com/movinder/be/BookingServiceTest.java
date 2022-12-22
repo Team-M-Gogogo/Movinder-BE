@@ -82,6 +82,7 @@ public class BookingServiceTest {
         food.setFoodName("coke");
         food.setDescription("1L");
         food.setPrice(10);
+        food.setThumbnailUrl("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg");
 
 
         given(foodRepository.save(food)).willReturn(food);
